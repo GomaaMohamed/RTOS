@@ -2,7 +2,7 @@
 ```
 The real-time operating system (RTOS) that has been implemented is designed to provide efficient
 task scheduling and synchronization for embedded systems. This RTOS incorporates key features
-such as preemption, round-robin scheduling, as well as support for mutexes, counting semaphores,
+such as preemption, round-robin scheduling, Priority Inheritance, as well as support for mutexes, counting semaphores,
 and mailboxes. These features enable the system to handle concurrent tasks, prioritize critical
 operations, and ensure efficient resource sharing.
 
@@ -37,6 +37,7 @@ foundation for building complex, responsive, and reliable embedded applications.
 - [State Machine of the RTOS](#state_machine_of_the_rtos)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
+- [Features](#features)
 - [License](#license)
 
 
@@ -63,29 +64,21 @@ Stm32f103
 ```
 
 ## Usage
-1. To build the Project
+1. Configurations
 ```
-$ make all
+You can configure the RTOS throught the OS_config.h file located in service/include folder
 ```
-2. To clean the Project
+2. Using the features of the RTOS
 ```
-$ make clean
+You can use the RTOS by including the OS_interface.h file located in service/include folder
 ```
-3. To erase the Flash
-```
-$ make erase
-```
-4. To burn the Project
-```
-$ make flash
-```
-5. To debug the Project
-```
-$ ./openport
-  "This bash script will launch OpenOCD to establish a remote Telnet port on the target"
-$ ./startgdb ./app.elf
-  "This bash script will initiate a debugging session using gdb-multiarch."
-```
+## Features
+1. mutex
+2. semaphore
+3. mailbox
+4. priority ineritance
+5. preemption(high priority task can interrupt low priority task)
+6. round robin(for the tasks that equal in priority)
 
 ## License
 ```
