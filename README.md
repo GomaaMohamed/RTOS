@@ -1,35 +1,40 @@
 # RTOS
 ```
-The real-time operating system (RTOS) that has been implemented is designed to provide efficient task scheduling
-and synchronization for embedded systems. This RTOS incorporates key features such as preemption, round-robin
-scheduling, as well as support for mutexes, counting semaphores, and mailboxes. These features enable the system
-to handle concurrent tasks, prioritize critical operations, and ensure efficient resource sharing.
+The real-time operating system (RTOS) that has been implemented is designed to provide efficient
+task scheduling and synchronization for embedded systems. This RTOS incorporates key features
+such as preemption, round-robin scheduling, as well as support for mutexes, counting semaphores,
+and mailboxes. These features enable the system to handle concurrent tasks, prioritize critical
+operations, and ensure efficient resource sharing.
 
-Preemption, a fundamental feature of this RTOS, allows tasks to be interrupted and preempted by higher-priority
-tasks. This mechanism ensures that critical tasks can be executed in a timely manner, even in the presence of
-lower-priority tasks. By allowing tasks to be preempted, the RTOS significantly enhances responsiveness and
-enables the system to meet stringent real-time requirements.
+Preemption, a fundamental feature of this RTOS, allows tasks to be interrupted and preempted
+by higher-priority tasks. This mechanism ensures that critical tasks can be executed in a
+timely manner, even in the presence of lower-priority tasks. By allowing tasks to be preempted,
+the RTOS significantly enhances responsiveness and enables the system to meet stringent
+real-time requirements.
 
-Another important scheduling mechanism integrated into this RTOS is round-robin scheduling. Round-robin ensures
-fair allocation of CPU time among tasks of equal priority. Each task is granted a fixed time slice or quantum,
-after which the next task in the queue is executed. This approach prevents any single task from monopolizing
-the CPU and ensures a balanced distribution of processing time.
+Another important scheduling mechanism integrated into this RTOS is round-robin scheduling.
+Round-robin ensures fair allocation of CPU time among tasks of equal priority. Each task is
+granted a fixed time slice or quantum, after which the next task in the queue is executed.
+This approach prevents any single task from monopolizing the CPU and ensures a balanced
+distribution of processing time.
 
-To facilitate synchronization and resource sharing, this RTOS incorporates synchronization primitives such
-as mutexes, counting semaphores, and mailboxes. Mutexes provide mutual exclusion, allowing only one task to
-access a shared resource at a time. Counting semaphores enable synchronization between multiple tasks by
-allowing a specified number of tasks to access a shared resource simultaneously. Mailboxes provide a
-communication mechanism between tasks, allowing them to exchange data and messages in a controlled manner.
+To facilitate synchronization and resource sharing, this RTOS incorporates synchronization
+primitives such as mutexes, counting semaphores, and mailboxes. Mutexes provide mutual
+exclusion, allowing only one task to access a shared resource at a time. Counting semaphores
+enable synchronization between multiple tasks by allowing a specified number of tasks to access
+a shared resource simultaneously. Mailboxes provide a communication mechanism between tasks,
+allowing them to exchange data and messages in a controlled manner.
 
-By combining preemption, round-robin scheduling, and synchronization mechanisms, this RTOS provides a reliable
-and efficient platform for concurrent task execution in embedded systems. It offers the ability to meet real-time
-constraints, prioritize critical operations, and ensure the proper use of shared resources. With these features,
-the implemented RTOS offers a robust foundation for building complex, responsive, and reliable embedded applications.
+By combining preemption, round-robin scheduling, and synchronization mechanisms, this RTOS
+provides a reliable and efficient platform for concurrent task execution in embedded systems.
+It offers the ability to meet real-time constraints, prioritize critical operations, and ensure
+the proper use of shared resources. With these features,the implemented RTOS offers a robust
+foundation for building complex, responsive, and reliable embedded applications.
 ```
 
 ## Table of Contents
 - [Hardware](#hardware)
-- [Block Definition Diagram for the System](#block_definition_diagram_for_the_system)
+- [State Machine of the RTOS](#state_machine_of_the_rtos)
 - [Telematics Unit](#telematics_unit)
   - [Getting Started](#getting_started)
     - [Prerequisites](#Prerequisites)
@@ -48,12 +53,11 @@ the implemented RTOS offers a robust foundation for building complex, responsive
 ## Hardware
 ```
 Stm32f103
-NodeMCU
 ```
 
   
 ## Block Definition Diagram for the System
-![alt text](./images/rtos.png)
+![alt text](./images/rtos.ppm)
 
 ## Telematics Unit
 ### Getting Started
