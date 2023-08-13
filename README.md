@@ -2,9 +2,9 @@
 ```
 The real-time operating system (RTOS) that has been implemented is designed to provide efficient
 task scheduling and synchronization for embedded systems. This RTOS incorporates key features
-such as preemption, round-robin scheduling, Priority Inheritance, as well as support for mutexes, counting semaphores,
-and mailboxes. These features enable the system to handle concurrent tasks, prioritize critical
-operations, and ensure efficient resource sharing.
+such as preemption, round-robin scheduling, Priority Inheritance, as well as support for mutexes,
+counting semaphores,and mailboxes. These features enable the system to handle concurrent tasks,
+prioritize critical operations, and ensure efficient resource sharing.
 
 Preemption, a fundamental feature of this RTOS, allows tasks to be interrupted and preempted
 by higher-priority tasks. This mechanism ensures that critical tasks can be executed in a
