@@ -71,6 +71,7 @@ You can configure the RTOS throught the OS_config.h file located in service/incl
 2. Using the features of the RTOS
 ```
 You can use the RTOS by including the OS_interface.h file located in service/include folder
+For more details read OS_interface.h
 ```
 ## Features
 1. mutex
