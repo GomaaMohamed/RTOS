@@ -53,7 +53,7 @@ NodeMCU
 
   
 ## Block Definition Diagram for the System
-![alt text](./images/FOTA.png)
+![alt text](./images/rtos.png)
 
 ## Telematics Unit
 ### Getting Started
