@@ -83,7 +83,7 @@ For more details read OS_interface.h
 
 ## License
 ```
-This Project is released under the MIT License ↗. Feel free to use it in your own projects, 
+This Project is released under the GNU GPL License ↗. Feel free to use it in your own projects, 
 modify it, and distribute it as needed. If you find any issues or have suggestions for
 improvement, please open an issue or submit a pull request.
 ```
