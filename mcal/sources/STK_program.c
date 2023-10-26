@@ -1,138 +1,183 @@
-/*********************************************************************************/
-/* Author    : Gomaa Mohammed                                                      */
-/* Version   : V01                                                               */
-/* Date      : 24 August 2020                                                     */
-/*********************************************************************************/
+/*****************************************************************************
+* @file:    STK_program.c
+* @author:  Copyright (c) 2023 Gomaa Mohammed Gomaa. 
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Wed, 4 Oct 2023 13:31:12 +0200
+* @brief:   Reset Clock Control(RCC) Driver for STM32F103
+******************************************************************************/
 
+/* ==================================================================== */
+/* ========================== include files =========================== */
+/* ==================================================================== */
 #include      "STD_TYPES.h"
 #include      "BIT_MATH.h"
-
 
 #include      "STK_interface.h"
 #include      "STK_private.h"
 #include      "STK_config.h"
 
-void STK_voidInit(void)
-{
-	
-#if   CLK_SOURCE  ==  STK_AHB
-/* Disable STK - Disable STK Interrupt - Set clock source AHB */
-	STK->CTRL = 0x00000004;
 
-#elif   CLK_SOURCE  ==  STK_AHB_DIV_8
-    /* Disable STK - Disable STK Interrupt - Set clock source AHB/8 */
-	STK->CTRL = 0;
-#endif
-	
+/* ==================================================================== */
+/* ================ Public Functions Implementation =================== */
+/* ==================================================================== */
+
+// Function to initialize SysTick module
+void STK_init(void)
+{
+	// Select clock source of SysTick
+	#if   CLK_SOURCE  ==  STK_AHB
+		// Disable STK - Disable STK Interrupt - Set clock source AHB 
+		STK->CTRL = 0x00000004;
+
+	#elif   CLK_SOURCE  ==  STK_AHB_DIV_8
+	    // Disable STK - Disable STK interrupt - Set clock source AHB/8 
+		STK->CTRL = 0;
+	#endif	
 }
-void STK_voidSetBusyWait(u32 Copy_u32Ticks)
+
+// Function to make a delay with number of ticks
+void STK_setBusyWait(u32 Ticks)
 {   
     
-	/* Stop Timer and Make Values = 0 */
+	// Stop Timer and Make Values = 0 
 	CLR_BIT(STK->CTRL, 0);
 	STK->LOAD = 0;
 	STK->VAL  = 0;
-	/* Load Value To Timer */
-	STK->LOAD = Copy_u32Ticks;
-	/* Start Timer */
+
+	// Load value to timer 
+	STK->LOAD = Ticks;
+
+	// Start timer 
 	SET_BIT(STK->CTRL,0);
-	/* Check Flag */
-	while((GET_BIT(STK->CTRL,16)) == 0){
-		asm("NOP");
-		
-	}
-	
+
+	// Check Flag 
+	while((GET_BIT(STK->CTRL,16)) == 0);
+
 }
-void STK_voidSetIntervalSingle(u32 Copy_u32Ticks,void (*Copy_ptr)(void))
+
+// Function to execute a specific a single event after specific number of ticks
+void STK_setSingleInterval(u32 Ticks,void (*Callback)(void))
 {  
-    /* Stop Timer */
+	// Validate input parameters
+	ASSERT(Callback != NULL);
+
+	// Stop Timer 
 	SET_BIT(STK->CTRL, 0);
 	STK -> LOAD = 0;
 	STK -> VAL  = 0;
-    /* Set Mode to Single */
-	STK_u8ModeOfInterval = STK_SINGLE_INTERVAL;
-    /* Load ticks to load register */
-	STK->LOAD = Copy_u32Ticks;
-	/* Enable STK Interrupt */
+
+    // Set Mode to Single 
+	IntervalMode = STK_SINGLE_INTERVAL;
+
+    // Load ticks to load register
+	STK->LOAD = Ticks;
+
+	// Enable STK interrupt 
 	SET_BIT(STK->CTRL,1);
-	/* Start Timer */
+
+	// Save CallBack */
+	STK_Callback = Callback;
+
+	// Start Timer 
 	SET_BIT(STK->CTRL,0);
-	/* Save CallBack */
-	STK_Callback = Copy_ptr;
 }
-void STK_voidSetIntervalPeriodic(u32 Copy_u32Ticks,void (*Copy_ptr)(void))
-{  
-    
-    /* Set Mode to Single */
-	STK_u8ModeOfInterval = STK_PERIOD_INTERVAL;
-    /* Load ticks to load register */
-	STK->LOAD = Copy_u32Ticks;
-	/* Enable STK Interrupt */
+
+void STK_setPeriodicInterval(u32 Ticks,void (*Callback)(void))
+{     
+	// Validate input parameters
+	ASSERT(Callback != NULL);
+
+    // Set Mode to Periodic 
+	IntervalMode = STK_PERIOD_INTERVAL;
+
+    // Load ticks to load register 
+	STK->LOAD = Ticks;
+
+	// Enable STK Interrupt 
 	SET_BIT(STK->CTRL,1);
-	/* Start Timer */
+
+	// Save CallBack 
+	STK_Callback = Callback;
+
+	// Start timer 	
 	SET_BIT(STK->CTRL,0);
-	/* Save CallBack */
-	STK_Callback = Copy_ptr;
 }
-void STK_voidStopInterval(void)
+void STK_stopInterval(void)
 {
-	/* Disable STK Interrupt */
+	// Disable STK Interrupt 
 	CLR_BIT(STK->CTRL,1);
-	/* Stop Timer */
+	// Stop Timer 
 	CLR_BIT(STK->CTRL,0);
 	
-	/* Stop Timer */
+	// Stop Timer 
 	SET_BIT(STK->CTRL, 0);
 	STK->LOAD = 0;
 	STK->VAL  = 0;
 	
 	
 }
-u32  STK_u32GetElapsedTime(void)
+
+// Function to get elapsed number of ticks
+u32  STK_getElapsedTime(void)
 {
 	return (STK->LOAD - STK->VAL);
 }
-u32  STK_u32GetRemainingTime(void)
+
+// Function to get remaining number of ticks
+u32  STK_getRemainingTime(void)
 {
 	return (STK->VAL);
 }
-void STK_voidEnableInterrupt(void)
+
+// Function to enable SysTick interrupt
+void STK_enableInterrupt(void)
 {
 	SET_BIT(STK->CTRL,1);
 }
-void STK_voidDisableInterrupt(void)
+
+// Function to disable SysTick interrupt
+void STK_disableInterrupt(void)
 {
 	CLR_BIT(STK->CTRL, 1);
 }
-void STK_voidSetCallback(void (*Copy_ptr)(void))
+
+// Function to set callback of SysTick
+void STK_setCallback(void (*Callback)(void))
 {
-	/* Save CallBack */
-	STK_Callback = Copy_ptr;
-}
-void STK_voidSetFrequency(void (*Copy_ptr)(void))
-{
-	/* Save CallBack */
-	STK_Callback = Copy_ptr;
+	// Validate input parameters
+	ASSERT(Callback != NULL);
+	
+	//Save CallBack 
+	STK_Callback = Callback;
 }
 
-/* ISR of STK */
+/* ==================================================================== */
+/* ================ Private Functions Implementation ================== */
+/* ==================================================================== */
+
+// ISR of SysTick
 void SysTick_Handler(void)
-{u8 Local_u8Temporary;
+{
+	// Temporary variable used to clear SysTick flag
+	u8 Temp;
 	
-	if (STK_u8ModeOfInterval == STK_SINGLE_INTERVAL)
+	if (IntervalMode == STK_SINGLE_INTERVAL)
 	{
-		/* Disable STK Interrupt */
+		// Disable STK interrupt 
 		CLR_BIT(STK->CTRL, 1);
 	
-		/* Stop Timer */
+		// Stop timer 
 		CLR_BIT(STK->CTRL, 0);
 		STK -> LOAD = 0;
 		STK -> VAL  = 0;
 	}
 	
-	/* Callback notification */
+	// Callback notification 
 	STK_Callback();
 	
-	/* Clear interrupt flag */
-	Local_u8Temporary = GET_BIT(STK->CTRL,16);
+	// Clear interrupt flag 
+	Temp = GET_BIT(STK->CTRL,16);
 }

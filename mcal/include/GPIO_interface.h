@@ -1,107 +1,148 @@
-/*********************************************************************************/
-/* Author    : Gomaa Mohammed                                                    */
-/* Version   : V01                                                               */
-/* Date      : 12 August 2020                                                    */
-/*********************************************************************************/
+/*****************************************************************************
+* @file:    GPIO_interface.h
+* @author:  Copyright (c) 2023 Gomaa Mohammed Gomaa. 
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Sun, 1 Oct 2023 14:21:12 +0200
+* @brief:   General Purpose Input Output(GPIO) Driver for STM32F103
+******************************************************************************/
+#ifndef _GPIO_INTERFACE_H
+#define _GPIO_INTERFACE_H
 
-#ifndef _GPIO_INTERFACE_H_
-#define _GPIO_INTERFACE_H_
+/* ==================================================================== */
+/* ======================= public data types ========================== */
+/* ==================================================================== */
 
-/* Port Id */
-#define   GPIOA   0
-#define   GPIOB   1
-#define   GPIOC   2
-
-/* Half Port Id */
-#define   GPIO_FIRST_HALF    0
-#define   GPIO_SECOND_HALF   1
-
+/* Port Id Data Type */
+typedef enum
+{
+    GPIOA=0,
+    GPIOB,
+    GPIOC,
+    PORT_ID_ERR
+} PortId_type;
  
-/* Pin Id */
-#define     GPIO_PIN0     0
-#define     GPIO_PIN1     1
-#define     GPIO_PIN2     2
-#define     GPIO_PIN3     3
-#define     GPIO_PIN4     4
-#define     GPIO_PIN5     5
-#define     GPIO_PIN6     6
-#define     GPIO_PIN7     7
-#define     GPIO_PIN8     8
-#define     GPIO_PIN9     9
-#define     GPIO_PIN10    10
-#define     GPIO_PIN11    11
-#define     GPIO_PIN12    12
-#define     GPIO_PIN13    13
-#define     GPIO_PIN14    14
-#define     GPIO_PIN15    15
+/* Pin Id Data Type */
+typedef enum
+{
+    GPIO_PIN0=0,
+    GPIO_PIN1,
+    GPIO_PIN2,
+    GPIO_PIN3,
+    GPIO_PIN4,
+    GPIO_PIN5,
+    GPIO_PIN6,
+    GPIO_PIN7,
+    GPIO_PIN8,
+    GPIO_PIN9,
+    GPIO_PIN10,
+    GPIO_PIN11,
+    GPIO_PIN12,
+    GPIO_PIN13,
+    GPIO_PIN14,
+    GPIO_PIN15,
+    PIN_ID_ERR
+} PinId_type;
 
-/* Pin State */
-#define     GPIO_HIGH 1
-#define     GPIO_LOW  0
+/* Pin State Data Type */
+typedef enum
+{
+    GPIO_HIGH=1,
+    GPIO_LOW=0,
+    PIN_STATE_ERR=2
+} PinState_type;
 
-/* Pin Output Modes */
-#define     GPIO_OUTPUT_10MHZ_PP      0b0001   //0x1
-#define     GPIO_OUTPUT_10MHZ_OD      0b0101   //0x5
-#define     GPIO_OUTPUT_10MHZ_AFPP    0b1001   //0x9
-#define     GPIO_OUTPUT_10MHZ_AFOD    0b1101   //0xD
-			
-#define     GPIO_OUTPUT_2MHZ_PP      0b0010    //0x2
-#define     GPIO_OUTPUT_2MHZ_OD      0b0110    //0x6
-#define     GPIO_OUTPUT_2MHZ_AFPP    0b1010    //0xA 
-#define     GPIO_OUTPUT_2MHZ_AFOD    0b1110    //0xE
-			
-#define     GPIO_OUTPUT_50MHZ_PP      0b0011   //0x3
-#define     GPIO_OUTPUT_50MHZ_OD      0b0111   //0x7
-#define     GPIO_OUTPUT_50MHZ_AFPP    0b1011   //0xB
-#define     GPIO_OUTPUT_50MHZ_AFOD    0b1111   //0xF
-
-/* Pin Input Modes */
-#define     GPIO_INPUT_ANALOG               0b0000   //0x0
-#define     GPIO_INPUT_FLOATING             0b0100   //0x4
-#define     GPIO_INPUT_PULL_UP_DOWN         0b1000   //0x8
-
-
-/* HalfPort Output Modes */
-#define     GPIO_OUTPUTHP_10MHZ_PP      0x11111111
-#define     GPIO_OUTPUTHP_10MHZ_OD      0x55555555
-#define     GPIO_OUTPUTHP_10MHZ_AFPP    0x99999999
-#define     GPIO_OUTPUTHP_10MHZ_AFOD    0xDDDDDDDD
-
-#define     GPIO_OUTPUTHP_2MHZ_PP      0x22222222  
-#define     GPIO_OUTPUTHP_2MHZ_OD      0x66666666
-#define     GPIO_OUTPUTHP_2MHZ_AFPP    0xAAAAAAAA
-#define     GPIO_OUTPUTHP_2MHZ_AFOD    0xEEEEEEEE
-			
-#define     GPIO_OUTPUTHP_50MHZ_PP     0x33333333
-#define     GPIO_OUTPUTHP_50MHZ_OD     0x77777777
-#define     GPIO_OUTPUTHP_50MHZ_AFPP   0xBBBBBBBB
-#define     GPIO_OUTPUTHP_50MHZ_AFOD   0xFFFFFFFF
-
-/* HalfPort Input Modes */
-#define     GPIO_INPUTHP_ANALOG              0x00000000
-#define     GPIO_INPUTHP_FLOATING            0x44444444
-#define     GPIO_INPUTHP_PULL_UP_DOWN        0x88888888
-
- 
-
-/* Pin Operations */
-void GPIO_voidSetPinDirection(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Mode);
-
-void GPIO_voidSetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Value);
-
-u8 GPIO_voidGetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin);
-
-void GPIO_voidLockPinMode(u8 Copy_u8Port,u8 Copy_u8Pin);
+/* Pin Mode Data Type */
+typedef enum
+{
+    /*************** Output modes ***************/
+    GPIO_OUTPUT_10MHZ_PP=0b0001,   //0x1
+    GPIO_OUTPUT_10MHZ_OD=0b0101,   //0x5
+    GPIO_OUTPUT_10MHZ_AFPP=0b1001, //0x9
+    GPIO_OUTPUT_10MHZ_AFOD=0b1101, //0xD  
+    GPIO_OUTPUT_2MHZ_PP=0b0010,    //0x2
+    GPIO_OUTPUT_2MHZ_OD=0b0110,    //0x6
+    GPIO_OUTPUT_2MHZ_AFPP=0b1010,  //0xA 
+    GPIO_OUTPUT_2MHZ_AFOD=0b1110,  //0xE 
+    GPIO_OUTPUT_50MHZ_PP=0b0011,   //0x3
+    GPIO_OUTPUT_50MHZ_OD=0b0111,   //0x7
+    GPIO_OUTPUT_50MHZ_AFPP=0b1011, //0xB
+    GPIO_OUTPUT_50MHZ_AFOD=0b1111, //0xF
+    /**************** Input modes ********************/
+    GPIO_INPUT_ANALOG=0b0000,      //0x0
+    GPIO_INPUT_FLOATING=0b0100,    //0x4
+    GPIO_INPUT_PULL_UP_DOWN=0b1000,//0x8
+    PIN_MODE_ERR=16
+} PinMode_type;
 
 
-/* Half Port Operations */
-void GPIO_voidSetHalfPortDirection(u8 Copy_u8Port,u8 Copy_u8HalfPort,u32 Copy_u32HalfPortMode);
+/* ==================================================================== */
+/* ==================== Public Functions Declaration ================== */
+/* ==================================================================== */
 
-void GPIO_voidSetHalfPortValue(u8 Copy_u8Port,u8 Copy_u8HalfPort,u16 Copy_u8Value);
+/**
+ * @brief---------------------> Configure pin mode
+ * @parameter1----------------> (PortId) port that contains the pin
+ * @parameter2----------------> (PinId) pin to set its mode 
+ * @parameter3----------------> (PinMode) mode to be setted for a pin
+ * @return--------------------> None
+ * @preconditions-------------> None
+ * @postconditions------------> None
+ * @synchronous/asynchronous--> Synchronous
+ * @reentrant/non-reentrant---> Reentrant      
+ */
+void GPIO_setPinDirection(PortId_type PortId,PinId_type PinId,PinMode_type PinMode);
 
-u8 GPIO_voidGetHalfPortValue(u8 Copy_u8Port,u8 Copy_u8HalfPort);
+/**
+ * @brief---------------------> Set pin state
+ * @parameter1----------------> (PortId) port that contains the pin
+ * @parameter2----------------> (PinId) pin to set its state
+ * @parameter3----------------> (PinState) State to be assigned to pin
+ * @return--------------------> None
+ * @preconditions-------------> Pin is initialized
+ * @postconditions------------> None
+ * @synchronous/asynchronous--> Synchronous
+ * @reentrant/non-reentrant---> Reentrant      
+ */
+void GPIO_setPinValue(PortId_type PortId,PinId_type PinId,PinState_type PinState);
 
+/**
+ * @brief---------------------> Toggle pin state
+ * @parameter1----------------> (PortId) port that contains the pin
+ * @parameter2----------------> (PinId) pin to toggle its state
+ * @return--------------------> None
+ * @preconditions-------------> Pin is initialized
+ * @postconditions------------> None
+ * @synchronous/asynchronous--> Synchronous
+ * @reentrant/non-reentrant---> Reentrant    
+ */
+void GPIO_togglePinValue(PortId_type PortId, PinId_type PinId);
 
+/**
+ * @brief---------------------> Get pin state
+ * @parameter1----------------> (PortId) port that contains the pin
+ * @parameter2----------------> (PinId) pin to get its state
+ * @return--------------------> Pin state
+ * @preconditions-------------> Pin is initialized
+ * @postconditions------------> None
+ * @synchronous/asynchronous--> Synchronous
+ * @reentrant/non-reentrant---> Reentrant      
+ */
+PinState_type GPIO_getPinValue(PortId_type PortId,PinId_type PinId);
+
+/**
+ * @brief---------------------> Lock pin mode to prevent changing mode 
+ * @parameter1----------------> (PortId) port that contains the pin
+ * @parameter2----------------> (PinId) pin to lock its mode
+ * @return--------------------> None
+ * @preconditions-------------> Pin is initialized
+ * @postconditions------------> None
+ * @synchronous/asynchronous--> Synchronous
+ * @reentrant/non-reentrant---> Reentrant 
+ */
+void GPIO_lockPinMode(PortId_type PortId,PinId_type PinId);
 
 
 

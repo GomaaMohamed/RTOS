@@ -1,11 +1,19 @@
-/*********************************************************************************/
-/* Author    : Gomaa Mohammed                                                      */
-/* Version   : V01                                                               */
-/* Date      : 19 August 2020                                                     */
-/*********************************************************************************/
+/*****************************************************************************
+* @file:    NVIC_config.h
+* @author:  Copyright (c) 2023 Gomaa Mohammed Gomaa.
+* @license: GNU GPL version 3 or later.
+*		This is free software: you are free to change and redistribute it.  
+*		There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Thu, 5 Oct 2023 17:21:12 +0200
+* @brief:   Nested Vectored Interrupt Controller(NVIC) Driver for STM32F103
+******************************************************************************/
+#ifndef _NVIC_CONFIG_H
+#define _NVIC_CONFIG_H
 
-#ifndef _NVIC_CONFIG_H_
-#define _NVIC_CONFIG_H_
+/* ==================================================================== */
+/* =================== Configurations Selection ======================= */
+/* ==================================================================== */
 
 /* select priority group combination
       Options:

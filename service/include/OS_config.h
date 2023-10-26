@@ -1,9 +1,12 @@
-/************************************************************************
-* @file:     OS_config.h
-* @author:   Copyright (c) 2023 Gomaa Mohammed Gomaa.  All rights reserved.
-* @version:  V0.1   
-* @date:     Fri, 12 Aug 2023 18:21:12 +0300
-* @brief:    OS Module.
+/*****************************************************************************
+* @file:    OS_config.h
+* @author:  Copyright (c) 2023 Gomaa Mohammed.
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Wed, 25 Oct 2023 11:21:12 +0200
+* @brief:   OS Module Configurations.
 *************************************************************************/
 #ifndef   _OS_CONFIG_H
 #define   _OS_CONFIG_H 

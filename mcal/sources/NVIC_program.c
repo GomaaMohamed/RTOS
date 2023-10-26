@@ -1,119 +1,187 @@
-/*********************************************************************************/
-/* Author    : Gomaa Mohammed                                                    */
-/* Version   : V01                                                               */
-/* Date      : 19 August 2020                                                    */
-/*********************************************************************************/
+/*****************************************************************************
+* @file:    GPIO_program.c
+* @author:  Copyright (c) 2023 Gomaa Mohammed Gomaa.
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Thu, 5 Oct 2023 17:21:12 +0200
+* @brief:   General Purpose Input Output(GPIO) Driver for STM32F103
+******************************************************************************/
 
+/* ==================================================================== */
+/* ========================== include files =========================== */
+/* ==================================================================== */
 #include      "STD_TYPES.h"
 #include      "BIT_MATH.h"
-
 
 #include      "NVIC_interface.h"
 #include      "NVIC_private.h"
 #include      "NVIC_config.h"
 
-void NVIC_voidInit(void){
+/* ==================================================================== */
+/* ================= Public Functions Implementation ================== */
+/* ==================================================================== */
 
-     // set priority group combination
-     SCB_AIRCR = PRIORITY_GROUP_COMBINATION;
-     
-     // set initial group/subgroup priority for the nedded interrupts
-     
-     // enable needed interrupts 
+// Function to initialize NVIC module
+void NVIC_init(void){
+
+    // set priority group combination
+    SCB_AIRCR = PRIORITY_GROUP_COMBINATION;
+    
+    // set initial group/subgroup priority for the nedded interrupts
+    
+    // enable needed interrupts 
      
 }
 
-void NVIC_voidEnableInterrupt(u8 Copy_s8IntId){
+// Function to enable an interrupt
+void NVIC_enableInterrupt(InterruptId_type InterruptId){
+	
+	// Validate input parameters
+	ASSERT(InterruptId >= 0 && InterruptId < INTERRUPT_ERR);
 
-    Copy_s8IntId -= 7;
-	if(Copy_s8IntId <= 31)
+	// Make the offset of internal exeptions
+    InterruptId -= 7;
+
+	// Select an interrupt to be enabled
+	if(InterruptId <= 31)
 	{
-		NVIC_ISER0 = 1<<(Copy_s8IntId);
+		NVIC_ISER0 = 1<<(InterruptId);
 	}
-	else if(Copy_s8IntId <= 59)
+	else if(InterruptId <= 59)
 	{
-		Copy_s8IntId -= 32;
-		NVIC_ISER1 = 1<<(Copy_s8IntId);
+		InterruptId -= 32;
+		NVIC_ISER1 = 1<<(InterruptId);
 	}
 }
-void NVIC_voidDisableInterrupt(u8 Copy_s8IntId){
+
+// Function to disable an interrupt
+void NVIC_disableInterrupt(InterruptId_type InterruptId){
        
-    Copy_s8IntId -= 7;
-	if(Copy_s8IntId <= 31)
+    // Make the offset of internal exeptions
+    InterruptId -= 7;
+
+	// Select an interrupt to be disabled
+	if(InterruptId <= 31)
 	{
-		NVIC_ICER0 = 1<<(Copy_s8IntId);
+		NVIC_ICER0 = 1<<(InterruptId);
 	}
-	else if(Copy_s8IntId <= 59)
+	else if(InterruptId <= 59)
 	{
-		Copy_s8IntId -= 32;
-		NVIC_ICER1 = 1<<(Copy_s8IntId);
+		InterruptId -= 32;
+		NVIC_ICER1 = 1<<(InterruptId);
 	}
 }
-void NVIC_voidSetPendingFlag(u8 Copy_s8IntId){
 
-    Copy_s8IntId -= 7;
-	if(Copy_s8IntId <= 31)
+// Function to set pending flag
+void NVIC_setPendingFlag(InterruptId_type InterruptId){
+
+	// Validate input parameters
+	ASSERT(InterruptId >= 0 && InterruptId < INTERRUPT_ERR);
+
+    // Make the offset of internal exeptions
+    InterruptId -= 7;
+
+	// Select an interrupt to set its pending flag
+	if(InterruptId <= 31)
 	{
-		NVIC_ISPR0 = 1<<(Copy_s8IntId);
+		NVIC_ISPR0 = 1<<(InterruptId);
 	}
-	else if(Copy_s8IntId <= 59)
+	else if(InterruptId <= 59)
 	{
-		Copy_s8IntId -= 32;
-		NVIC_ISPR1 = 1<<(Copy_s8IntId);
+		InterruptId -= 32;
+		NVIC_ISPR1 = 1<<(InterruptId);
 	}
 }
-void NVIC_voidClearPendingFlag(u8 Copy_s8IntId){
 
-        Copy_s8IntId -= 7;
-	if(Copy_s8IntId <= 31)
+// Function to clear pending flag
+void NVIC_clearPendingFlag(InterruptId_type InterruptId){
+
+	// Validate input parameters
+	ASSERT(InterruptId >= 0 && InterruptId < INTERRUPT_ERR);
+
+    // Make the offset of internal exeptions
+    InterruptId -= 7;
+
+	// Select an interrupt to clear its pending flag
+	if(InterruptId <= 31)
 	{
-		NVIC_ICPR0 = 1<<(Copy_s8IntId);
+		NVIC_ICPR0 = 1<<(InterruptId);
 	}
-	else if(Copy_s8IntId <= 59)
+	else if(InterruptId <= 59)
 	{
-		Copy_s8IntId -= 32;
-		NVIC_ICPR1 = 1<<(Copy_s8IntId);
+		InterruptId -= 32;
+		NVIC_ICPR1 = 1<<(InterruptId);
 	}
 }
-u8 NVIC_voidGetActiveFlag(u8 Copy_s8IntId){
 
-        Copy_s8IntId -= 7;
-	u8 LocalResult;
-	if(Copy_s8IntId <= 31)
+// Function to get the active flag
+u8 NVIC_getActiveFlag(InterruptId_type InterruptId){
+
+	// Validate input parameters
+	ASSERT(InterruptId >= 0 && InterruptId < INTERRUPT_ERR);
+
+    // Make the offset of internal exeptions
+    InterruptId -= 7;
+
+	u8 Result;
+
+	// Select an interrupt to get active flag
+	if(InterruptId <= 31)
 	{
-		LocalResult = GET_BIT(NVIC_IAPR0,Copy_s8IntId);
+		Result = GET_BIT(NVIC_IAPR0,InterruptId);
 	}
-	else if(Copy_s8IntId <= 59)
+	else if(InterruptId <= 59)
 	{
-		Copy_s8IntId -= 32;
-		LocalResult = GET_BIT(NVIC_IAPR1,Copy_s8IntId);
+		InterruptId -= 32;
+		Result = GET_BIT(NVIC_IAPR1,InterruptId);
 	}
-	return LocalResult;
+	return Result;
 }
-void NVIC_voidSetPriority(u8 Copy_s8IntId,u8 Copy_u8GroupPriority,u8 Copy_u8SubPriority){
 
-       u8 Local_u8Priority = Copy_u8SubPriority | (Copy_u8GroupPriority << ((PRIORITY_GROUP_COMBINATION - 0x05FA0300)/256));
-	/* Core Periphiral */	
-	if(Copy_s8IntId <= 6)
+// Function to set priority
+void NVIC_setPriority(InterruptId_type InterruptId,u8 GroupPriority,u8 SubPriority){
+
+	// Validate input parameters
+	ASSERT(InterruptId >= 0 && InterruptId < INTERRUPT_ERR);
+
+	// Adjust priority
+    u8 Priority = SubPriority | (GroupPriority << ((PRIORITY_GROUP_COMBINATION - 0x05FA0300)/256));
+	
+	// Set Core Periphirals	priority
+	if(InterruptId <= 6)
 	{       
-	    if(Copy_s8IntId <= 2){
-		SCB_SHPR[Copy_s8IntId] = Local_u8Priority << 4;
+	    if(InterruptId <= 2)
+		{
+			SCB_SHPR[InterruptId] = Priority << 4;
 		}
-		else if(Copy_s8IntId == 3){
-		SCB_SHPR[Copy_s8IntId + 4] = Local_u8Priority << 4;
+		else if(InterruptId == 3)
+		{
+			SCB_SHPR[InterruptId + 4] = Priority << 4;
 		}
-		else if(Copy_s8IntId > 4){
-		SCB_SHPR[Copy_s8IntId + 5] = Local_u8Priority << 4;
+		else if(InterruptId > 4)
+		{
+			SCB_SHPR[InterruptId + 5] = Priority << 4;
+		}
+		else 
+		{
+			// Do nothing
 		}
 	}
-	/* other Periphiral */
-    else if(Copy_s8IntId > 6)
+	// Set other Periphirals priority
+    else if(InterruptId > 6)
 	{       
-		NVIC_IPR[Copy_s8IntId-7] = Local_u8Priority << 4;
+		NVIC_IPR[InterruptId-7] = Priority << 4;
 	}	
+	else 
+	{
+		// Do nothing
+	}
+	
 }
 
-/**************** system calls ****************/
+/********************************* System calls *********************************/
 void __enable_irq(void){
     asm("CPSIE i");
 }
@@ -142,28 +210,28 @@ void __DMB(void){
 	asm("DMB");
 }
 
-u32 __REV(u32 value) {
-    u32 result;
-    asm("rev %0, %1" : "=r" (result) : "r" (value));
-    return result;
+u32 __REV(u32 Value) {
+    u32 Result;
+    asm("rev %0, %1" : "=r" (Result) : "r" (Value));
+    return Result;
 }
 
-u32 __REV16(u32 value) {
-    u32 result;
-    asm("rev16 %0, %1" : "=r" (result) : "r" (value));
-    return result;
+u32 __REV16(u32 Value) {
+    u32 Result;
+    asm("rev16 %0, %1" : "=r" (Result) : "r" (Value));
+    return Result;
 }
 
-u32 __REVSH(u32 value) {
-    u32 result;
-    asm("revsh %0, %1" : "=r" (result) : "r" (value));
-    return result;
+u32 __REVSH(u32 Value) {
+    u32 Result;
+    asm("revsh %0, %1" : "=r" (Result) : "r" (Value));
+    return Result;
 }
 
-u32 __RBIT(u32 value) {
-    u32 result;
-    asm("rbit %0, %1" : "=r" (result) : "r" (value));
-    return result;
+u32 __RBIT(u32 Value) {
+    u32 Result;
+    asm("rbit %0, %1" : "=r" (Result) : "r" (Value));
+    return Result;
 }
 
 void __SEV(void){
@@ -179,53 +247,58 @@ void __WFI(void){
 }
 
 u32 __get_PRIMASK(void){
-	u32 result;
-    asm("MRS %0, PRIMASK" : "=r" (result));
-	result &= 1;
-	return result;
+	u32 Result;
+    asm("MRS %0, PRIMASK" : "=r" (Result));
+	Result &= 1;
+	return Result;
 }
 
-void __set_PRIMASK(u32 value){
-	asm("MSR PRIMASK, %0" : : "r" (value));
+u32 __get_CPUID(void)
+{
+	return SCB_CPUID;
+}
+
+void __set_PRIMASK(u32 Value){
+	asm("MSR PRIMASK, %0" : : "r" (Value));
 }
 
 u32 __get_FAULTMASK(void){
-	u32 result;
-    asm("MRS %0, FAULTMASK" : "=r" (result));
-	result &= 1;
-    return result;
+	u32 Result;
+    asm("MRS %0, FAULTMASK" : "=r" (Result));
+	Result &= 1;
+    return Result;
 }
 
-void __set_FAULTMASK(u32 value){
-	asm("MSR FAULTMASK, %0" : : "r" (value));
+void __set_FAULTMASK(u32 Value){
+	asm("MSR FAULTMASK, %0" : : "r" (Value));
 }
 
 u32 __get_BASEPRI(void){
-	u32 result;
-    asm("MRS %0, BASEPRI" : "=r" (result));
-	result = (result >> 4);
-	return result;
+	u32 Result;
+    asm("MRS %0, BASEPRI" : "=r" (Result));
+	Result = (Result >> 4);
+	return Result;
 }
 
-void __set_BASEPRI(u32 value){
-	asm("MSR BASEPRI, %0" : : "r" (value));
+void __set_BASEPRI(u32 Value){
+	asm("MSR BASEPRI, %0" : : "r" (Value));
 }
 
 u32 __get_CONTROL(void){
-	u32 result;
-    asm("MRS %0, CONTROL" : "=r" (result));
-	result &= 3;
-    return result;
+	u32 Result;
+    asm("MRS %0, CONTROL" : "=r" (Result));
+	Result &= 3;
+    return Result;
 }
 
-void __set_CONTROL(u32 value){
-	asm("MSR CONTROL, %0" : : "r" (value));
+void __set_CONTROL(u32 Value){
+	asm("MSR CONTROL, %0" : : "r" (Value));
 }
 
 u32 __get_MSP(void){
-	u32 result;
-    asm("MRS %0, MSP" : "=r" (result));
-    return result;
+	u32 Result;
+    asm("MRS %0, MSP" : "=r" (Result));
+    return Result;
 }
 
 void __set_MSP(u32 TopOfMainStack){
@@ -233,9 +306,9 @@ void __set_MSP(u32 TopOfMainStack){
 }
 
 u32 __get_PSP(void){
-	u32 result;
-    asm("MRS %0, PSP" : "=r" (result));
-    return result;
+	u32 Result;
+    asm("MRS %0, PSP" : "=r" (Result));
+    return Result;
 }
 
 void __set_PSP(u32 TopOfProcStack){
@@ -275,40 +348,40 @@ void __set_VTOR(u32 VectorTableOffset){
 	SCB_VTOR = VectorTableOffset << 9;
 }
 
-u32 __LDREXW(u32 *address) {
-    u32 result;
-    asm volatile("ldrex %0, [%1]" : "=r" (result) : "r" (address));
-    return result;
+u32 __LDREXW(u32 *Address) {
+    u32 Result;
+    asm volatile("ldrex %0, [%1]" : "=r" (Result) : "r" (Address));
+    return Result;
 }
 
-u32 __STREXW(u32 value, u32 *address) {
-    u32 result;
-    asm volatile("strex %0, %1, [%2]" : "=&r" (result) : "r" (value), "r" (address));
-    return result;
+u32 __STREXW(u32 Value, u32 *Address) {
+    u32 Result;
+    asm volatile("strex %0, %1, [%2]" : "=&r" (Result) : "r" (Value), "r" (Address));
+    return Result;
 }
 
-u16 __LDREXH( u16 *address) {
-    u16 result;
-    asm volatile("ldrexh %0, [%1]" : "=r" (result) : "r" (address));
-    return result;
+u16 __LDREXH( u16 *Address) {
+    u16 Result;
+    asm volatile("ldrexh %0, [%1]" : "=r" (Result) : "r" (Address));
+    return Result;
 }
 
-u16 __STREXH(u16 value, u16 *address) {
-    u16 result;
-    asm volatile("strexh %0, %1, [%2]" : "=&r" (result) : "r" (value), "r" (address));
-    return result;
+u16 __STREXH(u16 Value, u16 *Address) {
+    u16 Result;
+    asm volatile("strexh %0, %1, [%2]" : "=&r" (Result) : "r" (Value), "r" (Address));
+    return Result;
 }
 
-u8 __LDREXB(u8 *address){
-    u8 result;
-    asm volatile("ldrexb %0, [%1]" : "=r" (result) : "r" (address));
-    return result;
+u8 __LDREXB(u8 *Address){
+    u8 Result;
+    asm volatile("ldrexb %0, [%1]" : "=r" (Result) : "r" (Address));
+    return Result;
 }
 
-u8 __STREXB(u8 value, u8 *address) {
-    u8 result;
-    asm volatile("strexb %0, %1, [%2]" : "=&r" (result) : "r" (value), "r" (address));
-    return result;
+u8 __STREXB(u8 Value, u8 *Address) {
+    u8 Result;
+    asm volatile("strexb %0, %1, [%2]" : "=&r" (Result) : "r" (Value), "r" (Address));
+    return Result;
 }
 
 void __CLREX(void){

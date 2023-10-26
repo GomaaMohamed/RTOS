@@ -1,10 +1,13 @@
-/************************************************************************
-* @file:     OSTASK_interface.h
-* @author:   Copyright (c) 2023 Gomaa Mohammed Gomaa.  All rights reserved.
-* @version:  V0.1   
-* @date:     Fri, 12 Aug 2023 18:21:12 +0300
-* @brief:    Task Module.
-*************************************************************************/
+/*****************************************************************************
+* @file:    OSTASK_interface.h
+* @author:  Copyright (c) 2023 Gomaa Mohammed.
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Wed, 25 Oct 2023 11:21:12 +0200
+* @brief:   Task Module.
+*******************************************************************************/
 #ifndef _OSTASK_INTERFACE_H_
 #define _OSTASK_INTERFACE_H_
 

@@ -1,7 +1,22 @@
+/*****************************************************************************
+* @file:    svc_calls.s
+* @author:  Copyright (c) 2023 Gomaa Mohammed.
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Wed, 25 Oct 2023 11:21:12 +0200
+* @brief:   Supervisor Call Modeule 
+*           This module is responsible for handling the supervisor calls
+*           that implement the system calls of the operating system
+******************************************************************************/
+
+// Define the type of syntax | cpu architecture | instruction set type
 .syntax unified
 .cpu cortex-m3
 .thumb
 
+// Define the symbols system calls
 .global OS_SVC_startScheduler
 .global OS_SVC_createTask
 
@@ -22,8 +37,10 @@
 
 .global OS_SVC_setTaskPriority
 
+// Define the section that will be used to store this part of code
 .text
 
+// Define the supervisor call functions
 .type OS_SVC_startScheduler, %function
 OS_SVC_startScheduler:
     svc 0

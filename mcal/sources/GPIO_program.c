@@ -1,10 +1,17 @@
-/*********************************************************************************/
-/* Author    : Gomaa Mohammed                                                      */
-/* Version   : V01                                                               */
-/* Date      : 8 August 2020                                                     */
-/*********************************************************************************/
+/*****************************************************************************
+* @file:    GPIO_program.c
+* @author:  Copyright (c) 2023 Gomaa Mohammed Gomaa. 
+* @license: GNU GPL version 3 or later.
+*			This is free software: you are free to change and redistribute it.  
+*			There is NO WARRANTY, to the extent permitted by law.
+* @version: V0.2   
+* @date:    Sun, 1 Oct 2023 14:21:12 +0200
+* @brief:   General Purpose Input Output(GPIO) Driver for STM32F103
+******************************************************************************/
 
-
+/* ==================================================================== */
+/* ========================== include files =========================== */
+/* ==================================================================== */
 #include   "STD_TYPES.h"
 #include   "BIT_MATH.h"
 
@@ -12,286 +19,227 @@
 #include   "GPIO_private.h"
 #include   "GPIO_config.h"
 
-/* Pin Operations*/
-void GPIO_voidSetPinDirection(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Mode)
+
+/* ==================================================================== */
+/* ================= Public Functions Implementation ================== */
+/* ==================================================================== */
+
+// Function to set pin mode
+void GPIO_setPinDirection(PortId_type PortId,PinId_type PinId,PinMode_type PinMode)
 {
-	switch(Copy_u8Port){
+	// Validate input parameters
+	ASSERT(PortId >= 0 && PortId < PORT_ID_ERR );
+	ASSERT(PinId >= 0 && PinId < PIN_ID_ERR );
+	ASSERT(PinMode >= 0 && PinMode < PIN_MODE_ERR );
+
+	// Select PortId and PinId then set its mode
+	switch(PortId)
+	{
 		case GPIOA :
-		if(Copy_u8Pin <= 7)
-		{
-			GPIOA_CRL &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOA_CRL |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		else if(Copy_u8Pin <= 15)
-		{   Copy_u8Pin -= 8;
-			GPIOA_CRH &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOA_CRH |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		break;
+			if(PinId <= GPIO_PIN7)
+			{
+				GPIOA_CRL &=~ ((0b1111)<<(PinId * 4));
+				GPIOA_CRL |=  ((PinMode)<<(PinId * 4));
+			}
+			else if(PinId <= GPIO_PIN15)
+			{   PinId -= 8;
+				GPIOA_CRH &=~ ((0b1111)<<(PinId * 4));
+				GPIOA_CRH |=  ((PinMode)<<(PinId * 4));
+			}
+			else
+			{
+				// Do nothing
+			}
+			break;
 		case GPIOB :
-		if(Copy_u8Pin <= 7)
-		{
-			GPIOB_CRL &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOB_CRL |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		else if(Copy_u8Pin <= 15)
-		{   Copy_u8Pin -= 8;
-			GPIOB_CRH &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOB_CRH |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		break;
-		
+			if(PinId <= GPIO_PIN7)
+			{
+				GPIOB_CRL &=~ ((0b1111)<<(PinId * 4));
+				GPIOB_CRL |=  ((PinMode)<<(PinId * 4));
+			}
+			else if(PinId <= GPIO_PIN15)
+			{   PinId -= 8;
+				GPIOB_CRH &=~ ((0b1111)<<(PinId * 4));
+				GPIOB_CRH |=  ((PinMode)<<(PinId * 4));
+			}
+			else
+			{
+				// Do nothing
+			}
+		    break;
 		case GPIOC :
-		if(Copy_u8Pin <= 7)
-		{
-			GPIOC_CRL &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOC_CRL |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		else if(Copy_u8Pin <= 15)
-		{   Copy_u8Pin -= 8;
-			GPIOC_CRH &=~ ((0b1111)<<(Copy_u8Pin * 4));
-			GPIOC_CRH |=  ((Copy_u8Mode)<<(Copy_u8Pin * 4));
-		}
-		break;
-		
+			if(PinId <= GPIO_PIN7)
+			{
+				GPIOC_CRL &=~ ((0b1111)<<(PinId * 4));
+				GPIOC_CRL |=  ((PinMode)<<(PinId * 4));
+			}
+			else if(PinId <= GPIO_PIN15)
+			{   PinId -= 8;
+				GPIOC_CRH &=~ ((0b1111)<<(PinId * 4));
+				GPIOC_CRH |=  ((PinMode)<<(PinId * 4));
+			}
+			else
+			{
+				// Do nothing
+			}
+			break;
+		default:
+			//Do nothing
+			break;
 	}
-	
-	
 }
 
-void GPIO_voidSetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin,u8 Copy_u8Value)
+// Function to set the mode of any pin
+void GPIO_setPinValue(PortId_type PortId,PinId_type PinId,PinState_type PinState)
 {
-	
-	switch(Copy_u8Port){
+	// Validate input parameters
+	ASSERT(PortId >= 0 && PortId < PORT_ID_ERR );
+	ASSERT(PinId >= 0 && PinId < PIN_ID_ERR );
+	ASSERT(PinState >= 0 && PinState < PIN_MODE_ERR );
+
+	// Select PortId and PinId then set its state
+	switch(PortId)
+	{
 		case GPIOA :
-		if(Copy_u8Value == GPIO_HIGH)
-		{
-			GPIOA_BSRR = 1<<(Copy_u8Pin);
-		}
-		else if(Copy_u8Value  == GPIO_LOW)
-		{  
-	        GPIOA_BRR = 1<<(Copy_u8Pin);
-		}
-		break;
+			if(PinState == GPIO_HIGH)
+			{
+				GPIOA_BSRR = 1<<(PinId);
+			}
+			else if(PinState  == GPIO_LOW)
+			{  
+	    	    GPIOA_BRR = 1<<(PinId);
+			}
+			else
+			{
+				// Do nothing
+			}
+			break;
 		case GPIOB :
-		if(Copy_u8Value == GPIO_HIGH)
-		{
-			GPIOB_BSRR = 1<<(Copy_u8Pin);
-		}
-		else if(Copy_u8Value  == GPIO_LOW)
-		{  
-	        GPIOB_BRR = 1<<(Copy_u8Pin);
-		}
-		
-		break;
-		
+			if(PinState == GPIO_HIGH)
+			{
+				GPIOB_BSRR = 1<<(PinId);
+			}
+			else if(PinState  == GPIO_LOW)
+			{  
+	    	    GPIOB_BRR = 1<<(PinId);
+			}
+			else
+			{
+				// Do nothing
+			}
+			break;
 		case GPIOC :
-				if(Copy_u8Value == GPIO_HIGH)
-				{
-					GPIOC_BSRR = 1<<(Copy_u8Pin);
-				}
-				else if(Copy_u8Value  == GPIO_LOW)
-				{
-			        GPIOC_BRR = 1<<(Copy_u8Pin);
-				}
-		break;
-		
-	}
-	
+			if(PinState == GPIO_HIGH)
+			{
+				GPIOC_BSRR = 1<<(PinId);
+			}
+			else if(PinState == GPIO_LOW)
+			{
+			    GPIOC_BRR = 1<<(PinId);
+			}
+			else
+			{
+				// Do nothing
+			}
+			break;
+		default:
+			// Do nothing
+			break;
+	}	
 }
 
-u8 GPIO_voidGetPinValue(u8 Copy_u8Port,u8 Copy_u8Pin)
+// Function to toggle the mode of any pin
+void GPIO_togglePinValue(PortId_type PortId,PinId_type PinId)
+{
+	// Validate input parameters
+	ASSERT(PortId >= 0 && PortId < PORT_ID_ERR );
+	ASSERT(PinId >= 0 && PinId < PIN_ID_ERR );
+
+	// Select PortId and PinId then toggle its state
+	switch(PortId)
+	{
+		case GPIOA :
+			TOG_BIT(GPIOA_ODR,PinId);
+			break;
+		case GPIOB :
+			TOG_BIT(GPIOB_ODR,PinId);
+			break;
+		case GPIOC :
+			TOG_BIT(GPIOC_ODR,PinId);
+			break;
+		default:
+			// Do nothing
+			break;
+	}	
+}
+
+// Function to get pin state
+PinState_type GPIO_getPinValue(PortId_type PortId,PinId_type PinId)
 { 
-u8 Loc_u8Result = 0;
+	// Validate input parameters
+	ASSERT(PortId >= 0 && PortId < PORT_ID_ERR );
+	ASSERT(PinId >= 0 && PinId < PIN_ID_ERR );
+	
+	// Variable to hold pin state
+	PinState_type Result = GPIO_LOW;
 
-	switch(Copy_u8Port){
+	// Select PortId and PinId then get its state
+	switch(PortId){
 		case GPIOA :
-		Loc_u8Result = GET_BIT(GPIOA_IDR,Copy_u8Pin);
-		break;
+			Result = GET_BIT(GPIOA_IDR,PinId);
+			break;
 		case GPIOB :
-		Loc_u8Result = GET_BIT(GPIOB_IDR,Copy_u8Pin);
-		
-		break;
-		
+			Result = GET_BIT(GPIOB_IDR,PinId);
+			break;
 		case GPIOC :
-		Loc_u8Result = GET_BIT(GPIOC_IDR,Copy_u8Pin);
-		break;
-		
+			Result = GET_BIT(GPIOC_IDR,PinId);
+			break;
+		default:
+			// Do nothing
+			break;
 	}
-	
-	return Loc_u8Result;
-	
+	return Result;
 }
 
-void GPIO_voidLockPinMode(u8 Copy_u8Port,u8 Copy_u8Pin)
-{   u8 read = 0;
-    switch(Copy_u8Port)
+void GPIO_lockPinMode(PortId_type PortId,PinId_type PinId)
+{   
+	// Validate input parameters
+	ASSERT(PortId >= 0 && PortId < PORT_ID_ERR );
+	ASSERT(PinId >= 0 && PinId < PIN_ID_ERR );
+
+	// Temp Variable
+	u8 Read = 0;
+
+	// Select PortId and PinId to lock its mode
+    switch(PortId)
 	{   
 		case GPIOA:
-		SET_BIT(GPIOA_LCKR,Copy_u8Pin);
-		SET_BIT(GPIOA_LCKR,16);
-		CLR_BIT(GPIOA_LCKR,16);
-		SET_BIT(GPIOA_LCKR,16);
-		read = GET_BIT(GPIOA_LCKR,16);
-		
-		break;
+			SET_BIT(GPIOA_LCKR,PinId);
+			SET_BIT(GPIOA_LCKR,16);
+			CLR_BIT(GPIOA_LCKR,16);
+			SET_BIT(GPIOA_LCKR,16);
+			Read = GET_BIT(GPIOA_LCKR,16);
+			break;
 		case GPIOB: 
-		
-		SET_BIT(GPIOB_LCKR,Copy_u8Pin);
-		SET_BIT(GPIOB_LCKR,16);
-		CLR_BIT(GPIOB_LCKR,16);
-		SET_BIT(GPIOB_LCKR,16);
-		read = GET_BIT(GPIOB_LCKR,16);
-		break;
+			SET_BIT(GPIOB_LCKR,PinId);
+			SET_BIT(GPIOB_LCKR,16);
+			CLR_BIT(GPIOB_LCKR,16);
+			SET_BIT(GPIOB_LCKR,16);
+			Read = GET_BIT(GPIOB_LCKR,16);
+			break;
 		case GPIOC:
-		SET_BIT(GPIOC_LCKR,Copy_u8Pin);
-		SET_BIT(GPIOC_LCKR,16);
-		CLR_BIT(GPIOC_LCKR,16);
-		SET_BIT(GPIOC_LCKR,16);
-		read = GET_BIT(GPIOC_LCKR,16);
-		break;
+			SET_BIT(GPIOC_LCKR,PinId);
+			SET_BIT(GPIOC_LCKR,16);
+			CLR_BIT(GPIOC_LCKR,16);
+			SET_BIT(GPIOC_LCKR,16);
+			Read = GET_BIT(GPIOC_LCKR,16);
+			break;
+		default:
+			// Do nothing
 	}	
-	
 }
 
-/* Half Port Operations */
-void GPIO_voidSetHalfPortDirection(u8 Copy_u8Port,u8 Copy_u8HalfPort,u32 Copy_u32HalfPortMode)
-{
-	switch(Copy_u8Port){
-		case GPIOA :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF)
-		{
-			GPIOA_CRL &=~ (0xFFFFFFFF);
-			GPIOA_CRL =  Copy_u32HalfPortMode;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{   
-	        GPIOA_CRH &=~ (0xFFFFFFFF);
-			GPIOA_CRH =  Copy_u32HalfPortMode;
-		}
-		break;
-		case GPIOB :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF)
-		{
-			GPIOB_CRL &=~ (0xFFFFFFFF);
-			GPIOB_CRL =  Copy_u32HalfPortMode;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{   
-	        GPIOB_CRH &=~ (0xFFFFFFFF);
-			GPIOB_CRH =  Copy_u32HalfPortMode;
-		}
-		break;
-		
-		case GPIOC :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF)
-		{
-			GPIOC_CRL &=~ (0xFFFFFFFF);
-			GPIOC_CRL =  Copy_u32HalfPortMode;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{   
-	        GPIOC_CRH &=~ (0xFFFFFFFF);
-			GPIOC_CRH =  Copy_u32HalfPortMode;
-		}
-		break;
-		
-	}
-	
-	
-}
 
-void GPIO_voidSetHalfPortValue(u8 Copy_u8Port,u8 Copy_u8HalfPort,u16 Copy_u8Value)
-{
-	
-	switch(Copy_u8Port){
-		case GPIOA :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			GPIOA_ODR &=~ (0xFFFF);
-			GPIOA_ODR |= Copy_u8Value;
-			//asm("NOP");
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-			GPIOA_ODR &=~ (0xFFFF0000);
-	        GPIOA_ODR |= ((Copy_u8Value)<<8);
-		}
-		break;
-		case GPIOB :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			GPIOA_ODR &=~ (0xFFFF);
-			GPIOB_ODR = Copy_u8Value;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-			GPIOA_ODR &=~ (0xFFFF0000);
-	        GPIOB_ODR |= ((Copy_u8Value)<<8);
-		}
-		
-		break;
-		
-		case GPIOC :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			GPIOA_ODR &=~ (0xFFFF);
-			GPIOC_ODR = Copy_u8Value;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-			GPIOA_ODR &=~ (0xFFFF0000);
-	        GPIOC_ODR |= ((Copy_u8Value)<<8);
-		}
-		break;
-		
-	}
-	
-}
 
-u8 GPIO_voidGetHalfPortValue(u8 Copy_u8Port,u8 Copy_u8HalfPort)
-{
-	
-u8 Loc_u8Result = 0;
-
-	switch(Copy_u8Port){
-		case GPIOA :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			Loc_u8Result = GPIOA_IDR;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-	        Loc_u8Result = (GPIOA_IDR >> 8);
-		}
-		break;
-		case GPIOB :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			Loc_u8Result = GPIOB_IDR;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-	        Loc_u8Result = (GPIOB_IDR >> 8);
-		}
-		
-		break;
-		
-		case GPIOC :
-		if(Copy_u8HalfPort == GPIO_FIRST_HALF )
-		{
-			Loc_u8Result = GPIOC_IDR;
-		}
-		else if(Copy_u8HalfPort == GPIO_SECOND_HALF)
-		{  
-	        Loc_u8Result = (GPIOC_IDR >> 8);
-		}
-		break;
-		
-	}
-	
-	return Loc_u8Result;
-	
-}
 
 

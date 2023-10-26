@@ -1,6 +1,6 @@
 #Home of the Work Space
 #Edit the path of the project here
-HOME := /home/gomaa/embedded/08-ARMCortex-M/RTOS
+HOME := /home/gomaa/embedded/08-ARMCortex-M/rtos
 CC = arm-none-eabi-gcc
 AS = arm-none-eabi-as 
 LD = arm-none-eabi-ld 
